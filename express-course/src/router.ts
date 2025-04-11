@@ -5,7 +5,7 @@ const router = Router();
 // products
 
 router.get("/product", (req: Request, res: Response) => {
-  res.json({ message: req.body });
+  res.json({ message: "Hello You are authenticated congrats" });
 });
 
 router.get("/product/:id", () => {});
