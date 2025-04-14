@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../db";
 import { comparePaswords, createJWT, hashPassword } from "../modules/auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
 export const createUser = async (
   req: Request & { body: { username: string; password: string } },
   res: Response
