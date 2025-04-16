@@ -9,6 +9,13 @@ import {
   getProducts,
   updateProduct,
 } from "./handlers/product";
+import {
+  createUpdate,
+  deleteUpdate,
+  getOneUpdate,
+  updateUpdate,
+} from "./handlers/update";
+import { getUpdates } from "./handlers/update";
 
 const router = Router();
 
@@ -36,9 +43,9 @@ router.delete("/product/:id", deleteProduct as RequestHandler);
 
 // updates
 
-router.get("/update", () => {});
+router.get("/update", getUpdates as unknown as RequestHandler);
 
-router.get("/update/:id", () => {});
+router.get("/update/:id", getOneUpdate as unknown as RequestHandler);
 
 router.put(
   "/update/:id",
@@ -50,17 +57,17 @@ router.put(
     check("status").equals("DEPRECATED"),
   ]),
   body("version").optional(),
-  () => {}
+  updateUpdate as unknown as RequestHandler
 );
 
 router.post(
   "/update",
   body("title").exists().isString(),
   body("body").exists().isString(),
-  () => {}
+  createUpdate as unknown as RequestHandler
 );
 
-router.delete("/update/:id", () => {});
+router.delete("/update/:id", deleteUpdate as unknown as RequestHandler);
 
 // update points
 
