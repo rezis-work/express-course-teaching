@@ -1,29 +1,38 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import { RequestHandler } from "express";
 import { body, check, oneOf } from "express-validator";
 import { handleInputErrors } from "./modules/middleware";
+import {
+  createProduct,
+  deleteProduct,
+  getOneProduct,
+  getProducts,
+  updateProduct,
+} from "./handlers/product";
 
 const router = Router();
 
 // products
 
-router.get("/product", (req: Request, res: Response) => {
-  res.json({ message: "Hello You are authenticated congrats" });
-});
+router.get("/product", getProducts as RequestHandler);
 
-router.get("/product/:id", () => {});
+router.get("/product/:id", getOneProduct as RequestHandler);
 
 router.put(
   "/product/:id",
   body("name").isString(),
   handleInputErrors,
-  (req: Request, res: Response): void => {
-    res.json({ message: "Hello You are authenticated congrats" });
-  }
+  updateProduct as RequestHandler
 );
 
-router.post("/product", body("name").isString(), handleInputErrors, () => {});
+router.post(
+  "/product",
+  body("name").isString(),
+  handleInputErrors,
+  createProduct as RequestHandler
+);
 
-router.delete("/product/:id", () => {});
+router.delete("/product/:id", deleteProduct as RequestHandler);
 
 // updates
 

@@ -2,6 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+interface UserRequest extends Request {
+  user: { id: string } | string | jwt.JwtPayload;
+}
+
 export const comparePaswords = (password: string, hash: string) => {
   return bcrypt.compare(password, hash);
 };
@@ -21,14 +25,8 @@ export const createJWT = (user: { id: string; username: string }) => {
   return token;
 };
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user: string | jwt.JwtPayload;
-  }
-}
-
 export const protect = (
-  req: Request & { user: string | jwt.JwtPayload },
+  req: UserRequest,
   res: Response,
   next: NextFunction
 ) => {

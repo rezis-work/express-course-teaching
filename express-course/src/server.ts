@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { protect } from "./modules/auth";
 import { createUser, signin } from "./handlers/user";
+import { RequestHandler } from "express";
 const app = express();
 
 const corsOptions = {
@@ -18,7 +19,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", protect, router);
+app.use("/api", protect as RequestHandler, router);
 app.post("/auth/user", createUser);
 app.post("/auth/signin", signin);
 
