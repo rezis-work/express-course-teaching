@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import prisma from "../db";
 import jwt from "jsonwebtoken";
 declare module "express-serve-static-core" {
@@ -51,15 +51,23 @@ export const getOneProduct = async (req: ProductRequest, res: Response) => {
   res.json({ data: product });
 };
 
-export const createProduct = async (req: ProductRequest, res: Response) => {
-  const product = await prisma.product.create({
-    data: {
-      name: req.body.name,
-      belongsToId: req.user.id,
-    },
-  });
+export const createProduct = async (
+  req: ProductRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const product = await prisma.product.create({
+      data: {
+        name: req.body.name,
+        belongsToId: req.user.id,
+      },
+    });
 
-  res.json({ data: product });
+    res.json({ data: product });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateProduct = async (req: ProductRequest, res: Response) => {

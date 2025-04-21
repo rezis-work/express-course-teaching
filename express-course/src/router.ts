@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { RequestHandler } from "express";
+import { NextFunction, Router } from "express";
+import { RequestHandler, Request, Response } from "express";
 import { body, check, oneOf } from "express-validator";
 import { handleInputErrors } from "./modules/middleware";
 import {
@@ -91,5 +91,15 @@ router.post(
 );
 
 router.delete("/updatepoint/:id", () => {});
+
+router.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err.type === "auth") {
+    res.status(401).json({ message: "unauthorized" });
+  } else if (err.type === "input") {
+    res.status(400).json({ message: "invalid input" });
+  } else {
+    res.status(500).json({ message: "internal server error from router" });
+  }
+});
 
 export default router;

@@ -1,11 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import prisma from "../db";
 import { comparePaswords, createJWT, hashPassword } from "../modules/auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const createUser = async (
-  req: Request & { body: { username: string; password: string } },
-  res: Response
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
   const { username, password }: { username: string; password: string } =
     req.body;
@@ -21,10 +22,11 @@ export const createUser = async (
     res.json({ message: "User created", token });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
-      res.status(400).json({ message: "Username already exists" });
+      if (error.code === "P2002") {
+        res.status(400).json({ message: "Error creating user" });
+      }
     }
-    console.log(error);
-    res.status(400).json({ message: "Error creating user" });
+    next(error);
   }
 };
 
